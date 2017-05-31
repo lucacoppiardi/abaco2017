@@ -23,9 +23,14 @@ int main(int argc, char **argv)
 	cout<<"Soluzione 1 (+): "<<ris1<<endl;
 	cout<<"Soluzione 2 (-): "<<ris2<<endl;
 	
-	double a1(10), b1(20);
+	double a1, b1;
+	cout<<"Media"<<endl;
+	cout<<"A1: ";
+	cin>>a1;
+	cout<<"B1: ";
+	cin>>b1;
 	double c1 = mean(a1,b1);
-	cout << "c: " << c1 << endl;
+	cout << "media: " << c1 << endl;
 	
 	return 0;
 }
