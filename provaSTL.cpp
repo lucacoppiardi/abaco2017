@@ -19,7 +19,7 @@ int main(int argc, char **argv)
 {
 	/* STL String */
 	string s1 = "Stringa di prova STL";
-	cout<<s1<<endl;
+	cout<< s1 <<endl;
 	string s2("Altra stringa");
 	cout<<s2<<endl;
 	string s3;
