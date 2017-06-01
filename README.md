@@ -1,2 +1,2 @@
-# abaco2017
-Repository alternanza scuola lavoro Abaco 2017
+# given a string, determine if it's palindrome
+Data una stringa controlla se è palindroma
