@@ -91,7 +91,7 @@ int main(int argc, char **argv)
 	cout<<endl;
 	
 	/* STL List */
-	std::list<int> int_list;
+	list<int> int_list;
 	int_list.push_back(1);
 	int_list.push_back(6);
 	int_list.push_back(8);
