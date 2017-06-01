@@ -9,4 +9,4 @@ Nell'esempio provaSTL.cpp abbiamo creato oggetti di questo tipo:
 - deque
 - stack
 
-Abbiamo provato metodi come insert, pop, push.
+Abbiamo provato metodi come insert, pop, push ed altri.
