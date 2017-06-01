@@ -8,4 +8,5 @@ Nell'esempio provaSTL.cpp abbiamo creato oggetti di questo tipo:
 - list
 - deque
 - stack
+
 Abbiamo provato metodi come insert, pop, push.
