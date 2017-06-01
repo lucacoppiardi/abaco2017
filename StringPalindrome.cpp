@@ -7,9 +7,9 @@ bool isPalindrome(string str);
 int main (int argc, char **argv) {
 	
 	string str;
-	cout<<"Inserire stringa palindroma: ";
-	cin>>str;
-	cout<<"Stringa inserita: "<<str<<endl;
+	cout << "Inserire stringa palindroma: ";
+	cin >> str;
+	cout << "Stringa inserita: " << str <<endl;
 	isPalindrome(str);
 	
 	string input;
@@ -28,7 +28,7 @@ int main (int argc, char **argv) {
 bool isPalindrome (string str) {
 	
 	int len = str.length();
-	cout<<"Lunghezza: "<<len<<endl;
+	cout << "Lunghezza: " << len <<endl;
 	bool palindroma = false;
 	for (int i=0; i<len; i++) {
 		/*cout<<" "<<i;
@@ -41,9 +41,9 @@ bool isPalindrome (string str) {
 		}
 	}
 	if (palindroma==true) {
-		cout<<"Palindroma";
+		cout << "Palindroma" << endl;
 	} else {
-		cout<<"Non palindroma";
+		cout << "Non palindroma" << endl;
 	}
 	return palindroma;
 	
