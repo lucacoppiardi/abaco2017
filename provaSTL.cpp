@@ -89,7 +89,7 @@ int main(int argc, char **argv)
 	impiegati[72]="Alessandro";
 	cout << "Map size: " << impiegati.size() << endl;
 	cout << "impiegati:" << endl;
-	for( map<int,string>::iterator ii=impiegati.begin(); ii!=impiegati.end(); ++ii)
+	for( map<int,string>::iterator ii=impiegati.begin(); ii!=impiegati.end(); ii++)
 	{
 		cout << (*ii).first << ": " << (*ii).second << endl;
 	}
@@ -107,8 +107,14 @@ int main(int argc, char **argv)
 		cout<<*list_iter<<" ";
 	}
 	cout<<endl;
+	cout<<"Contenuto lista ordinata: ";
+	list1.sort();
+	for(list<int>::iterator list_iter = list1.begin(); list_iter != list1.end(); list_iter++) {
+		cout<<*list_iter<<" ";
+	}
+	cout<<endl;
 	list1.remove(8);
-	cout<<"Rimosso elemento: ";
+	cout<<"Rimosso 8: ";
 	for(list<int>::iterator list_iter = list1.begin(); list_iter != list1.end(); list_iter++) {
 		cout<<*list_iter<<" ";
 	}
