@@ -12,6 +12,16 @@ int main (int argc, char **argv) {
 	cout<<"Stringa inserita: "<<str<<endl;
 	isPalindrome(str);
 	
+	string input;
+	cout << "Soluzione alternativa con iteratori:" << endl;
+	cout << "Stringa: ";
+	cin >> input;
+	if (input == string(input.rbegin(), input.rend())) {
+		cout << input << " e' palindroma";
+	} else {
+		cout << input << " non e' palindroma";
+	}
+	
 	return 0;
 }
 
