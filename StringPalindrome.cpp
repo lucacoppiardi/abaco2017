@@ -1,6 +1,7 @@
 #include <iostream>
 using namespace std;
 #include <string>
+#include <algorithm>
 
 bool isPalindrome(string str);
 
@@ -10,16 +11,21 @@ int main (int argc, char **argv) {
 	cout << "Inserire stringa palindroma: ";
 	cin >> str;
 	cout << "Stringa inserita: " << str <<endl;
+	cout << endl << "1: Funzione \"isPalindrome\":" << endl;
 	isPalindrome(str);
 	
-	string input;
-	cout << "Soluzione alternativa con iteratori:" << endl;
-	cout << "Stringa: ";
-	cin >> input;
-	if (input == string(input.rbegin(), input.rend())) {
-		cout << input << " e' palindroma";
+	cout << endl << "2: Iteratori:" << endl;
+	if (str == string(str.rbegin(), str.rend())) {
+		cout << str << " e' palindroma" << endl;
 	} else {
-		cout << input << " non e' palindroma";
+		cout << str << " non e' palindroma" << endl;
+	}
+	
+	cout << endl << "3: Metodo equals (STL):" << endl;
+	if (equal(str.begin(),str.end(),str.rbegin())) {
+		cout<<"Palindroma"<<endl;
+	} else {
+		cout<<"Non palindroma"<<endl;
 	}
 	
 	return 0;
