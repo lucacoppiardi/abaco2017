@@ -1,5 +1,3 @@
 # Benchmark su metodi per controllare stringhe palindrome
-Data una stringa controlla se è palindroma
-
-Benchmark di vari metodi
+Benchmark di vari metodi che controllano in modo diverso se una stringa è palindroma, testati in debug e release
 
