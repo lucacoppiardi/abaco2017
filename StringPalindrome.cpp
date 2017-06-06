@@ -4,7 +4,7 @@ using namespace std;
 #include <algorithm>
 #include <vector>
 #include <ctime>
-#define BENCH_ITERATIONS 50000
+#define BENCH_ITERATIONS 100000
 
 bool checkPalindrome_v1(const string& theString); // ciclo for
 bool checkPalindrome_v2(const string& theString); // stringa iteratori inversi
@@ -54,41 +54,56 @@ int main (int argc, char **argv) {
 	}
 	
 	cout<<endl;
+	
+	cout<<"Premere invio per iniziare il benchmark...";
+	cin.get();
 	*/
 	
-	cout<<"Premi invio per iniziare...";
-	cin.get();
-	
 	clock_t t1_start = clock();
-	cout<<endl<<"v1"<<endl;
-	for(unsigned int i = 0; i < BENCH_ITERATIONS; i++)
-	{
+	//cout<<endl<<"v1"<<endl;
+	for(unsigned int i = 0; i < BENCH_ITERATIONS; i++) {
 		for (unsigned int j=0;j<v1.size();j++) {
 			checkPalindrome_v1(v1[j]);
+			/*
+			if (checkPalindrome_v1(v1[j])==true) {
+				cout << theString << " e' palindroma" << endl;
+			} else {
+				cout << theString << " non e' palindroma" << endl;
+			}
+			*/
 		}
 	}
 	clock_t t1_stop = clock();
 	
-	cout<<endl<<"v2"<<endl;
+	//cout<<endl<<"v2"<<endl;
 	clock_t t2_start = clock();
-	for(unsigned int i = 0; i < BENCH_ITERATIONS; i++)
-	{
+	for(unsigned int i = 0; i < BENCH_ITERATIONS; i++) {
 		for (unsigned int j=0;j<v1.size();j++) {
 			checkPalindrome_v2(v1[j]);
+			/*
+			if (checkPalindrome_v2(v1[j]);==true) {
+				cout << theString << " e' palindroma" << endl;
+			} else {
+				cout << theString << " non e' palindroma" << endl;
+			}
+			*/
 		}
 	}
 	clock_t t2_stop = clock();
 
-	cout<<endl<<"v3"<<endl;
+	//cout<<endl<<"v3"<<endl;
 	clock_t t3_start = clock();
 	for(unsigned int i = 0; i < BENCH_ITERATIONS; i++)
 	{
 		for (unsigned int j=0;j<v1.size();j++) {
+			checkPalindrome_v3(v1[j]);
+			/*
 			if (checkPalindrome_v3(v1[j]) == true) {
 				cout << v1[j] << " e' palindroma" << endl;
 			} else {
 				cout << v1[j] << " non e' palindroma" << endl;
 			}
+			*/
 		}
 	}
 	clock_t t3_stop = clock();
@@ -97,9 +112,9 @@ int main (int argc, char **argv) {
 	double runTimeMillisec_2 = t2_stop - t2_start;
 	double runTimeMillisec_3 = t3_stop - t3_start;
 	
-	cout<<"T1: "<<runTimeMillisec_1/CLOCKS_PER_SEC<<endl;
-	cout<<"T2: "<<runTimeMillisec_2/CLOCKS_PER_SEC<<endl;
-	cout<<"T3: "<<runTimeMillisec_3/CLOCKS_PER_SEC<<endl;
+	cout<<"T1: "<<runTimeMillisec_1<<endl;
+	cout<<"T2: "<<runTimeMillisec_2<<endl;
+	cout<<"T3: "<<runTimeMillisec_3<<endl;
 	
 	return 0;
 }
@@ -114,7 +129,7 @@ bool checkPalindrome_v1 (const string& theString) {
 			palindroma = true;
 		} else {
 			palindroma = false;
-			break;
+			return palindroma;
 		}
 		/* TEST
 		cout<<" "<<i;
@@ -123,23 +138,15 @@ bool checkPalindrome_v1 (const string& theString) {
 		cout<<endl;
 		*/
 	}
-	if (palindroma==true) {
-		cout << theString << " e' palindroma" << endl;
-	} else {
-		cout << theString << " non e' palindroma" << endl;
-	}
 	return palindroma;
-	
 }
 
 bool checkPalindrome_v2(const string& theString) {
 	bool palindroma;
 	//cout << endl << "\tIteratori:" << endl;
 	if (theString == string(theString.rbegin(), theString.rend())) {
-		cout << theString << " e' palindroma" << endl;
 		palindroma=true;
 	} else {
-		cout << theString << " non e' palindroma" << endl;
 		palindroma=false;
 	}
 	return palindroma;
