@@ -4,17 +4,18 @@ using namespace std;
 #include <algorithm>
 #include <vector>
 #include <ctime>
+
 #define BENCH_ITERATIONS 1000000
 
 bool checkPalindrome_v1(const string& theString); // ciclo for
 bool checkPalindrome_v2(const string& theString); // stringa iteratori inversi
 bool checkPalindrome_v3(const string& theString); // equal
 //bool checkPalindrome_exv3 (const string& theString); // equal non ottimizzato
-double doTest(const std::vector<std::string>& toCheck, bool(*checkPalindromeFunz)(const string&));
+double doTest(const std::vector<std::string>& toCheck, bool(*checkPalindromeFunz)(const string&)); // benchmark
 
 int main (int argc, char **argv) {
 	
-	/*
+	/* // PROVA DI TUTTE LE FUNZIONI SU UNA SOLA STRINGA
 	string str;
 	cout << "Inserire stringa palindroma: ";
 	cin >> str;
@@ -30,7 +31,7 @@ int main (int argc, char **argv) {
 	v1.push_back("inipotinonavevanotopi");
 	v1.push_back("itopinonavevanonipoti");
 	
-	/*
+	/* // PROVA DI TUTTE LE FUNZIONI SU UN VECTOR DI STRING
 	for (unsigned int i=0;i<v1.size(); i++) {
 		cout<<v1[i]<<endl;
 	}
@@ -56,11 +57,13 @@ int main (int argc, char **argv) {
 	
 	cout<<endl;
 	
+	// BENCHMARK
 	cout<<"Premere invio per iniziare il benchmark...";
 	cin.get();
 	cout<<"BENCH_ITERATIONS = "<<BENCH_ITERATIONS<<endl;
 	*/
 	
+	// BENCHMARK (SENZA FUNZIONE DoTest)
 //	bool test1 = true;
 //	bool ritorno1 = false;
 //	int count=0;
@@ -124,6 +127,7 @@ int main (int argc, char **argv) {
 //	double runTimeMillisec_2 = (((double)(t2_stop - t2_start))/CLOCKS_PER_SEC)*1000;
 //	double runTimeMillisec_3 = (((double)(t3_stop - t3_start))/CLOCKS_PER_SEC)*1000;
 	
+	// BENCHMARK - FUNZIONE DoTest
 	double runTimeMillisec_1 = doTest(v1, checkPalindrome_v1);
 	double runTimeMillisec_2 = doTest(v1, checkPalindrome_v2);
 	double runTimeMillisec_3 = doTest(v1, checkPalindrome_v3);
@@ -135,6 +139,7 @@ int main (int argc, char **argv) {
 	return 0;
 }
 
+// VERSIONE 1 - CONTROLLA CARATTERE PER CARATTERE LE STRINGHE
 bool checkPalindrome_v1 (const string& theString) {
 	//cout << endl << "\tFunzione \"isPalindrome\":" << endl;
 	int len = theString.length();
@@ -157,6 +162,7 @@ bool checkPalindrome_v1 (const string& theString) {
 	return palindroma;
 }
 
+// VERSIONE 2 - CONFRONTA LE STRINGHE COSTRUENDO LE STRINGHE INVERSE GRAZIE AGLI ITERATORI INVERSI
 bool checkPalindrome_v2(const string& theString) {
 	bool palindroma;
 	//cout << endl << "\tIteratori:" << endl;
@@ -168,6 +174,7 @@ bool checkPalindrome_v2(const string& theString) {
 	return palindroma;
 }
 
+// VERSIONE 3 - METODO EQUAL
 bool checkPalindrome_v3(const string& theString) {
 	return equal(theString.begin(), theString.begin() + theString.size() / 2, theString.rbegin() );
 }
@@ -185,6 +192,7 @@ bool checkPalindrome_v3(const string& theString) {
 	return palindroma;
 }*/
 
+// FUNZIONE BENCHMARK
 double doTest(const vector<string>& toCheck, bool(*checkPalindromeFunz)(const string&)) {
 	bool test = true;
 	bool ritorno = false;
@@ -193,14 +201,14 @@ double doTest(const vector<string>& toCheck, bool(*checkPalindromeFunz)(const st
 	for(unsigned int i = 0; i < BENCH_ITERATIONS; i++) {
 		for (unsigned int j=0;j<toCheck.size();j++) {
 			ritorno = checkPalindromeFunz(toCheck[j]);
-			if (ritorno == test) {
+			if (ritorno == test) { // IL CICLO VIENE ESEGUITO
 				count+=500;
 			}
 		}
 	}
 	clock_t t_stop = clock();
 	double tempo = (((double)(t_stop - t_start))/CLOCKS_PER_SEC)*1000;
-	cout<<"contatore di prova: "<<count<<endl;
+	cout<<"contatore di prova: "<<count<<endl; // CONTROLLIAMO CHE IL CICLO SIA STATO ESEGUITO
 	count=0;
 	return tempo;
 }
