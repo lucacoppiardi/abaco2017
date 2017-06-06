@@ -11,7 +11,7 @@ bool checkPalindrome_v1(const string& theString); // ciclo for
 bool checkPalindrome_v2(const string& theString); // stringa iteratori inversi
 bool checkPalindrome_v3(const string& theString); // equal
 //bool checkPalindrome_exv3 (const string& theString); // equal non ottimizzato
-double doTest(const std::vector<std::string>& toCheck, bool(*checkPalindromeFunz)(const string&)); // benchmark
+int doTest(const vector<string>& toCheck, bool(*checkPalindromeFunz)(const string&)); // benchmark
 
 int main (int argc, char **argv) {
 	
@@ -128,9 +128,9 @@ int main (int argc, char **argv) {
 //	double runTimeMillisec_3 = (((double)(t3_stop - t3_start))/CLOCKS_PER_SEC)*1000;
 	
 	// BENCHMARK - FUNZIONE DoTest
-	double runTimeMillisec_1 = doTest(v1, checkPalindrome_v1);
-	double runTimeMillisec_2 = doTest(v1, checkPalindrome_v2);
-	double runTimeMillisec_3 = doTest(v1, checkPalindrome_v3);
+	int runTimeMillisec_1 = doTest(v1, checkPalindrome_v1);
+	int runTimeMillisec_2 = doTest(v1, checkPalindrome_v2);
+	int runTimeMillisec_3 = doTest(v1, checkPalindrome_v3);
 	
 	cout<<"T1: "<<runTimeMillisec_1<<endl;
 	cout<<"T2: "<<runTimeMillisec_2<<endl;
@@ -193,21 +193,21 @@ bool checkPalindrome_v3(const string& theString) {
 }*/
 
 // FUNZIONE BENCHMARK
-double doTest(const vector<string>& toCheck, bool(*checkPalindromeFunz)(const string&)) {
+int doTest(const vector<string>& toCheck, bool(*checkPalindromeFunz)(const string&)) {
 	bool test = true;
 	bool ritorno = false;
-	double count = 0;
+	int count = 0;
 	clock_t t_start = clock();
 	for(unsigned int i = 0; i < BENCH_ITERATIONS; i++) {
 		for (unsigned int j=0;j<toCheck.size();j++) {
 			ritorno = checkPalindromeFunz(toCheck[j]);
 			if (ritorno == test) { // IL CICLO VIENE ESEGUITO
-				count+=500;
+				count++;
 			}
 		}
 	}
 	clock_t t_stop = clock();
-	double tempo = (((double)(t_stop - t_start))/CLOCKS_PER_SEC)*1000;
+	int tempo = (((double)(t_stop - t_start))/CLOCKS_PER_SEC)*1000;
 	cout<<"contatore di prova: "<<count<<endl; // CONTROLLIAMO CHE IL CICLO SIA STATO ESEGUITO
 	count=0;
 	return tempo;
