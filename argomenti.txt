@@ -12,3 +12,10 @@ GitHub (iscrizione, branch, repository), StackOverflow, Programma per provare ST
 
 01/06
 Fine programma di prova STL (caricato su GitHub con documentazione)
+Programma per controllare se stringa è palindroma (string STL)
+
+05/06
+Benchmark di metodi per controllare se una stringa è palindroma
+
+06/06
+Analisi sul benchmark in modalità debug e release
