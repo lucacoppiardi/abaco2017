@@ -19,3 +19,6 @@ Benchmark di metodi per controllare se una stringa è palindroma
 
 06/06
 Analisi sul benchmark in modalità debug e release
+
+07/06
+Pagina HTML/CSS con risultati benchmark e grafico
