@@ -293,6 +293,9 @@ void genera_immagine_grafico (int t1, int t2, int t3) {
 	comandi << "set term png\n";
 	comandi << "set output \'grafico.png\'\n";
 	comandi << "plot \'benchmark.csv\' using 2:xtic(1) with histogram lt rgb \"red\" notitle\n";
+	comandi << "quit\n";
+	
+	comandi.close();
 	
 	ofstream filecsv;
 	filecsv.open("benchmark.csv");
