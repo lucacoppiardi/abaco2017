@@ -222,8 +222,8 @@ void genera_html(int t1, int t2, int t3) {
 	cout << "Generazione pagina HTML e CSS..." << endl;
 	
 	ofstream pagina;
-	pagina.open("benchmark.html");
-	
+	pagina.open("benchmark.html"); 
+	// Scrittura della pagina HTML
 	pagina << "<html>\n";
 	pagina << "<head>\n";
 	pagina << "\t<title>Benchmark</title>\n";
@@ -251,7 +251,7 @@ void genera_html(int t1, int t2, int t3) {
 	
 	ofstream stile;
 	stile.open("benchmark.css");
-	
+	// Scrittura del CSS
 	stile << "h3 {\n";
 	stile << "\ttext-align:center\n";
 	stile << "}\n";
@@ -282,7 +282,7 @@ void genera_immagine_grafico (int t1, int t2, int t3) {
 	
 	ofstream comandi;
 	comandi.open("comandi_gnuplot.txt");
-	
+	// Salvo i comandi da passare a Gnuplot in un file
 	comandi << "set datafile separator \";\"\n";
 	comandi << "set auto x\n";
 	comandi << "set auto y\n";
@@ -299,14 +299,14 @@ void genera_immagine_grafico (int t1, int t2, int t3) {
 	
 	ofstream filecsv;
 	filecsv.open("benchmark.csv");
-	
+	// Salvo i risultati del benchmark in un file CSV
 	filecsv << "1;" << t1 << "\n";
 	filecsv << "2;" << t2 << "\n";
 	filecsv << "3;" << t3 << "\n";
 	
 	filecsv.close();
 	
-	system("gnuplot comandi_gnuplot.txt");
+	system("gnuplot comandi_gnuplot.txt"); // Gnuplot legge i comandi da file creato prima e genera immagine
 	
 	cout << "Grafico completato. " << endl;
 }
