@@ -287,7 +287,7 @@ void genera_immagine_grafico (int t1, int t2, int t3) {
 	comandi << "set auto x\n";
 	comandi << "set auto y\n";
 	comandi << "set title \'Benchmark\'\n";
-	comandi << 	"set ylabel \'Tempo esec. (millisec)\'\n";
+	comandi << "set ylabel \'Tempo esec. (millisec)\'\n";
 	comandi << "set xlabel \'Funzioni\'\n";
 	comandi << "set style fill solid\n";
 	comandi << "set term png\n";
@@ -303,7 +303,7 @@ void genera_immagine_grafico (int t1, int t2, int t3) {
 	
 	filecsv.close();
 	
-	system("\"C:\\Program Files (x86)\\gnuplot\\bin\\gnuplot\" comandi_gnuplot.txt");
+	system("gnuplot comandi_gnuplot.txt");
 	
 	cout << "Grafico completato. " << endl;
 }
