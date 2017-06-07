@@ -1,0 +1,10 @@
+set datafile separator ";"
+set auto x
+set auto y
+set title 'Benchmark'
+set ylabel 'Tempo esec. (millisec)'
+set xlabel 'Funzioni'
+set style fill solid
+set term png
+set output 'grafico.png'
+plot 'benchmark.csv' using 2:xtic(1) with histogram lt rgb "red" notitle
