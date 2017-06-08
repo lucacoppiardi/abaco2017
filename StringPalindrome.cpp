@@ -6,14 +6,17 @@ using namespace std;
 #include <ctime>
 #include <fstream>
 
-#define BENCH_ITERATIONS 1000000
+int  BENCH_ITERATIONS =100000;
 
 bool checkPalindrome_v1(const string& theString); // ciclo for
 bool checkPalindrome_v2(const string& theString); // stringa iteratori inversi
 bool checkPalindrome_v3(const string& theString); // equal
 //bool checkPalindrome_exv3 (const string& theString); // equal non ottimizzato
 int doTest(const vector<string>& toCheck, bool(*checkPalindromeFunz)(const string&)); // benchmark
-void genera_html(int t1, int t2, int t3); // genera pagina html-css con risultati benchmark
+void generaHead_html();
+void genera_Tabella(vector<int> t);
+void chiudi_Html();
+void genera_css(); // genera pagina html-css con risultati benchmark
 void genera_immagine_grafico (int t1, int t2, int t3); // genera grafico con gnuplot
 
 int main (int argc, char **argv) {
@@ -130,16 +133,33 @@ int main (int argc, char **argv) {
 //	double runTimeMillisec_3 = (((double)(t3_stop - t3_start))/CLOCKS_PER_SEC)*1000;
 	
 	// BENCHMARK - FUNZIONE DoTest
-	int runTimeMillisec_1 = doTest(v1, checkPalindrome_v1);
-	int runTimeMillisec_2 = doTest(v1, checkPalindrome_v2);
-	int runTimeMillisec_3 = doTest(v1, checkPalindrome_v3);
+	generaHead_html();
+	for(int i=0;i<3;i++){
+		
+		int runTimeMillisec_1 = doTest(v1, checkPalindrome_v1);
+		int runTimeMillisec_2 = doTest(v1, checkPalindrome_v2);
+		int runTimeMillisec_3 = doTest(v1, checkPalindrome_v3);
+		
+		vector<int> t;
+		t.push_back(runTimeMillisec_1);
+		t.push_back(runTimeMillisec_2);
+		t.push_back(runTimeMillisec_3);
+		
+		if(i==2){
+			BENCH_ITERATIONS*=5;
+		}
+		else if(i==1)
+				BENCH_ITERATIONS*=10;
+				
+		genera_Tabella(t);		
+ 	}	
+ 	
+ 	chiudi_Html();
+ 	genera_css();	
+
 	
-	cout<<"T1: "<<runTimeMillisec_1<<endl;
-	cout<<"T2: "<<runTimeMillisec_2<<endl;
-	cout<<"T3: "<<runTimeMillisec_3<<endl;
+	//genera_immagine_grafico(runTimeMillisec_1, runTimeMillisec_2, runTimeMillisec_3);
 	
-	genera_immagine_grafico(runTimeMillisec_1, runTimeMillisec_2, runTimeMillisec_3);
-	genera_html(runTimeMillisec_1, runTimeMillisec_2, runTimeMillisec_3);
 		
 	return 0;
 }
@@ -218,11 +238,11 @@ int doTest(const vector<string>& toCheck, bool(*checkPalindromeFunz)(const strin
 	return tempo;
 }
 
-void genera_html(int t1, int t2, int t3) {
-	cout << "Generazione pagina HTML e CSS..." << endl;
+void generaHead_html(){
+	cout << "Generazione del HEADER della pagina HTML e CSS..." << endl;
 	
 	ofstream pagina;
-	pagina.open("benchmark.html"); 
+	pagina.open("benchmark.html");//,ios::app); 
 	// Scrittura della pagina HTML
 	pagina << "<html>\n";
 	pagina << "<head>\n";
@@ -233,22 +253,50 @@ void genera_html(int t1, int t2, int t3) {
 	pagina << "\t<h3>BENCH_ITERATIONS = " << BENCH_ITERATIONS << "</h3>\n";
 	pagina << "\t<table>\n";
 	pagina << "\t\t<tr>\n";
+	pagina << "\t\t\t<th>BENCH_ITERATIONS</th>\n";
 	pagina << "\t\t\t<th>T1</th>\n";
 	pagina << "\t\t\t<th>T2</th>\n";
 	pagina << "\t\t\t<th>T3</th>\n";
 	pagina << "\t\t</tr>\n";
+	
+	cout<<"HEADER GENERATO"<<endl;
+	
+}
+
+void genera_Tabella(vector<int> t){
+	cout << "Generazione della tabella della pagina HTML e CSS..." << endl;
+	
+	ofstream pagina;
+	pagina.open("benchmark.html",ios::app);
 	pagina << "\t\t<tr>\n";
-	pagina << "\t\t\t<td>" << t1 << "</td>\n";
-	pagina << "\t\t\t<td>" << t2 << "</td>\n";
-	pagina << "\t\t\t<td>" << t3 << "</td>\n";
+	pagina << "\t\t\t<td>" <<BENCH_ITERATIONS<<"</td>\n";
+	pagina << "\t\t\t<td>" << t[0] << "</td>\n";
+	pagina << "\t\t\t<td>" << t[1] << "</td>\n";
+	pagina << "\t\t\t<td>" << t[2] << "</td>\n";
 	pagina << "\t\t</tr>\n";
+	
+	pagina.close();
+	cout<<"generaTabella FInito"<<endl;	
+}	
+	
+void chiudi_Html(){
+	cout << "Generazione CHiusura della pagina HTML e CSS..." << endl;
+	
+	ofstream pagina;
+	pagina.open("benchmark.html",ios::app);	
+	
 	pagina << "\t</table>\n";
 	pagina << "\t<img src=\"grafico.png\" alt=\"gnuplot\">\n";
 	pagina << "</body>\n";
 	pagina << "</html>\n";
 	
 	pagina.close();
-	
+	cout<<"chiuso html"<<endl;
+}		
+	 
+
+void genera_css() {
+				
 	ofstream stile;
 	stile.open("benchmark.css");
 	// Scrittura del CSS
@@ -307,6 +355,6 @@ void genera_immagine_grafico (int t1, int t2, int t3) {
 	filecsv.close();
 	
 	system("gnuplot comandi_gnuplot.txt"); // Gnuplot legge i comandi da file creato prima e genera immagine
-	
-	cout << "Grafico completato. " << endl;
+	cout<<"grafico completato"<<endl;
 }
+	
