@@ -3,8 +3,14 @@ set auto x
 set auto y
 set title 'Benchmark'
 set ylabel 'Tempo esec. (millisec)'
-set xlabel 'Funzioni'
-set style fill solid
+set xlabel 'Iterazioni'
+set key left
+color1 = "#99ffff"; color2 = "#4671d5"; color3 = "#ff0000";
+set style data histogram
+set style histogram cluster gap 1
+set style fill solid border -1
+set xtic scale 0
 set term png
 set output 'grafico.png'
-plot 'benchmark.csv' using 2:xtic(1) with histogram lt rgb "red" notitle
+plot 'benchmark.csv' using 2:xtic(1) ti col fc rgb color1, '' u 3 ti col fc rgb color2, '' u 4 ti col fc rgb color3
+quit

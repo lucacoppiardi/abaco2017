@@ -150,6 +150,7 @@ int main (int argc, char **argv) {
 	int runTimeMillisec_3;
 		
 	generaHeadHTML();
+	
 	for (int i = 0; i < 3; i++) {
 		if (i==1) {
 			BENCH_ITERATIONS*=10;
@@ -170,10 +171,10 @@ int main (int argc, char **argv) {
 		tempi.push_back(runTimeMillisec_3);
 		insert_in_table(tempi);
 	}
-	chiudiHTML();
 	
 	genera_immagine_grafico();
-		
+	chiudiHTML();
+	
 	return 0;
 }
 
@@ -261,7 +262,7 @@ void salva_dati_CSV(int t1, int t2, int t3) {
 	}
 	filecsv << BENCH_ITERATIONS << ";" << t1 << ";" << t2 << ";" << t3 <<"\n";
 	filecsv.close();
-	cout << "File CSV creato." << endl;
+	cout << "Dati salvati sul file CSV." << endl;
 	return;
 }
 
@@ -362,11 +363,16 @@ void genera_immagine_grafico() {
 	comandi << "set auto y\n";
 	comandi << "set title \'Benchmark\'\n";
 	comandi << "set ylabel \'Tempo esec. (millisec)\'\n";
-	comandi << "set xlabel \'Funzioni\'\n";
-	comandi << "set style fill solid\n";
+	comandi << "set xlabel \'Iterazioni\'\n";
+	comandi << "set key left\n";
+	comandi << "color1 = \"#99ffff\"; color2 = \"#4671d5\"; color3 = \"#ff0000\";\n";
+	comandi << "set style data histogram\n";
+	comandi << "set style histogram cluster gap 1\n";
+	comandi << "set style fill solid border -1\n";
+	comandi << "set xtic scale 0\n";
 	comandi << "set term png\n";
 	comandi << "set output \'grafico.png\'\n";
-	comandi << "plot \'benchmark.csv\' using 2:xtic(1) with histogram lt rgb \"red\" notitle\n";
+	comandi << "plot \'benchmark.csv\' using 2:xtic(1) ti col fc rgb color1, \'\' u 3 ti col fc rgb color2, \'\' u 4 ti col fc rgb color3\n";
 	comandi << "quit\n";
 	comandi.close();
 	system("gnuplot comandi_gnuplot.txt"); // Gnuplot legge i comandi da file creato prima e genera immagine
