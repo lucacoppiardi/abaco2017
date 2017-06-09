@@ -1,0 +1,19 @@
+h2 {
+	text-align:center
+}
+table {
+	border-collapse: collapse;
+	text-align:center;
+	margin-left: auto;
+	margin-right: auto;
+}
+table, th, td {
+	border: 1px solid black;
+}
+th, td {
+	padding: 15px;
+}
+img {
+	display: block;
+	margin: auto;
+}
