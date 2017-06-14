@@ -24,7 +24,9 @@ void cancella_tipo_evento();
 void aggiungi_evento();
 void modifica_evento();
 void cancella_evento();
-void mostra_tutto();
+void mostra_persone();
+void mostra_tipo_evento();
+void mostra_eventi();
 
 int main(int argc, char **argv) {
 	rc = sqlite3_open("database.sqlite", &database);
@@ -120,7 +122,9 @@ void menu() {
 		cout << "\t7. Aggiungi evento" << endl;
 		cout << "\t8. Modifica evento" << endl;
 		cout << "\t9. Elimina evento" << endl;
-		cout << "\t10. Mostra tutti i dati" << endl;
+		cout << "\t10. Mostra tabella persone" << endl;
+		cout << "\t11. Mostra tabella tipo evento" << endl;
+		cout << "\t12. Mostra tabella eventi" << endl;
 		
 		cout << endl << "\tScelta: ";
 		cin >> scelta;
@@ -155,7 +159,13 @@ void menu() {
 				cancella_evento();
 				break;
 			case 10:
-				mostra_tutto();
+				mostra_persone();
+				break;
+			case 11:
+				mostra_tipo_evento();
+				break;
+			case 12:
+				mostra_eventi();
 				break;
 			default:
 				return;
@@ -167,11 +177,12 @@ void menu() {
 }
 
 static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
-   int i;
-   for(i = 0; i < argc; i++) {
-	  cout << azColName[i] << " = " << (argv[i] ? argv[i] : "NULL") << endl;
-   }
-   return 0;
+	int i;
+	for(i = 0; i < argc; i++) {
+		cout << azColName[i] << " = " << (argv[i] ? argv[i] : "NULL") << endl;
+	}
+	cout << endl;
+	return 0;
 }
 
 void aggiungi_persona () {
@@ -468,10 +479,42 @@ void cancella_evento () {
 	return;
 }
 
-void mostra_tutto() {
+void mostra_persone() {
 	
 	cout << "Lettura dati: " << endl;
-	comando = "SELECT * FROM PERSONE, EVENTI, TIPO_EVENTO";
+	comando = "SELECT * FROM PERSONE";
+	rc = sqlite3_exec(database, comando, callback, 0, &zErrMsg);
+	if( rc != SQLITE_OK ){
+		cout << "ERRORE: " << zErrMsg << endl;
+		sqlite3_free(zErrMsg);
+	} else {
+		cout << "Fine lettura" << endl;
+	}
+	
+	return;
+	
+}
+
+void mostra_tipo_evento() {
+	
+	cout << "Lettura dati: " << endl;
+	comando = "SELECT * FROM TIPO_EVENTO";
+	rc = sqlite3_exec(database, comando, callback, 0, &zErrMsg);
+	if( rc != SQLITE_OK ){
+		cout << "ERRORE: " << zErrMsg << endl;
+		sqlite3_free(zErrMsg);
+	} else {
+		cout << "Fine lettura" << endl;
+	}
+	
+	return;
+	
+}
+
+void mostra_eventi() {
+	
+	cout << "Lettura dati: " << endl;
+	comando = "SELECT * FROM EVENTI";
 	rc = sqlite3_exec(database, comando, callback, 0, &zErrMsg);
 	if( rc != SQLITE_OK ){
 		cout << "ERRORE: " << zErrMsg << endl;
