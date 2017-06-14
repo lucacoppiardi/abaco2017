@@ -27,6 +27,7 @@ void cancella_evento();
 void mostra_persone();
 void mostra_tipo_evento();
 void mostra_eventi();
+void estrai_eventi_ordine_crono();
 
 int main(int argc, char **argv) {
 	rc = sqlite3_open("database.sqlite", &database);
@@ -125,6 +126,7 @@ void menu() {
 		cout << "\t10. Mostra tabella persone" << endl;
 		cout << "\t11. Mostra tabella tipo evento" << endl;
 		cout << "\t12. Mostra tabella eventi" << endl;
+		cout << "\t13. Estrai eventi in ordine cronologico relativi ad una persona" << endl;
 		
 		cout << endl << "\tScelta: ";
 		cin >> scelta;
@@ -166,6 +168,9 @@ void menu() {
 				break;
 			case 12:
 				mostra_eventi();
+				break;
+			case 13:
+				estrai_eventi_ordine_crono();
 				break;
 			default:
 				return;
@@ -379,8 +384,10 @@ void aggiungi_evento () {
 	cout << "ID tipo evento: ";
 	cin >> ID_TIPO_EVENTO;
 	cout << "Data/ora evento: ";
-	fflush(stdin);
+	//fflush(stdin);
+	while(cin.get()!='\n');
 	cin.getline(DATA_ORA_EVENTO,DIM);
+	while(cin.get()!='\n');
 	
 	comando = "INSERT INTO EVENTI (ID_PERSONA, ID_TIPO_EVENTO, DATA_ORA_EVENTO) VALUES (?,?,?)";
 	rc = sqlite3_prepare(database, comando, strlen(comando), &stmt, &pzTest);
@@ -525,4 +532,52 @@ void mostra_eventi() {
 	
 	return;
 	
+}
+
+void estrai_eventi_ordine_crono() {
+	
+	int id_persona = 0;
+	cout << "Inserisci id persona :" ;
+	cin>>id_persona;
+	
+	comando = "SELECT * FROM EVENTI WHERE ID_PERSONA = ? ORDER BY DATA_ORA_EVENTO ASC;";
+	rc = sqlite3_prepare(database, comando, strlen(comando), &stmt, &pzTest);
+	
+	int i;
+    int row = 1;
+	sqlite3_bind_int(stmt,1, id_persona);
+	
+	 while (1) {
+		int s;
+
+        s = sqlite3_step (stmt);
+        if (s == SQLITE_ROW) {
+		    int bytes1;
+			int bytes2;
+			int bytes3;
+            const unsigned char * text1;
+			const unsigned char * text2;
+			const unsigned char * text3;
+            bytes1 = sqlite3_column_bytes(stmt,0);
+            text1  = sqlite3_column_text (stmt, 0);
+			
+            bytes2 = sqlite3_column_bytes(stmt,1);
+			text2  = sqlite3_column_text (stmt, 1);
+			
+			bytes3 = sqlite3_column_bytes(stmt,2);
+			text3  = sqlite3_column_text (stmt, 2);
+			printf ("%d: %s\t%s\t%s\t\n", row, text1,text2,text3);
+            row++;
+		}
+		else if (s == SQLITE_DONE) {
+				break;
+		}
+		else {
+				fprintf (stderr, "Failed.\n");
+				return;
+			}
+		
+	 }
+	
+	return;
 }
