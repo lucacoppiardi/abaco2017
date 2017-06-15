@@ -1,4 +1,4 @@
-29/05
+﻿29/05
 Setup dell'ambiente Codelite
 Librerie statiche e dinamiche
 
@@ -19,6 +19,27 @@ Benchmark di metodi per controllare se una stringa è palindroma
 
 06/06
 Analisi sul benchmark in modalità debug e release
+Inizio generazione pagina HTML con risultati
 
 07/06
 Pagina HTML/CSS con risultati benchmark e grafico
+
+08/06
+Miglioramento tabella e grafico benchmark
+
+09/06
+Benchmark in Java
+
+12/06
+SQLite C++
+
+13/06
+Funzioni C++ per gestire database SQLite
+
+14/06
+Conclusione funzioni C++ per gestire database SQLite
+
+15/06
+Fine funzioni C++ per gestione database SQLite
+Inizio miglioramento codice (utilizzo di classi C++)
+
