@@ -492,12 +492,14 @@ void modifica_evento() {
 	fflush(stdin);
 	cin.getline(DATA_ORA_EVENTO,DIM);
 	
+	
 	cout << "Nuovo ID tipo evento: ";
-	cin >> ID_TIPO_EVENTO;
+	cin >> NEW_ID_TIPO_EVENTO;
 	
 	cout << "Nuova data/ora evento: ";
 	fflush(stdin);
 	cin.getline(NEW_DATA_ORA_EVENTO,DIM);
+	
 	
 	comando = "UPDATE EVENTI SET ID_TIPO_EVENTO = ?, DATA_ORA_EVENTO = ? WHERE ID_PERSONA = ? AND ID_TIPO_EVENTO = ? AND DATA_ORA_EVENTO = ?";
 	rc = sqlite3_prepare(database, comando, strlen(comando), &stmt, &pzTest);
