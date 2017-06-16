@@ -1,9 +1,10 @@
 #include <iostream>
 using namespace std;
 #include <sqlite3.h>
-#include <cstdio>
-#include <cstring>
 #include <fstream>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <ctime>
 
 #define DIM 100
@@ -40,7 +41,7 @@ int main(int argc, char **argv) {
 	log.open("query.log"); 
 	if (!log.is_open()) {
 		cout << "Impossibile creare il log!" << endl;
-		return 0;
+		return -1;
 	}
 	log.close();
 	
@@ -164,6 +165,7 @@ void menu() {
 		
 		cout << endl << "\tSCELTA: ";
 		cin >> scelta;
+		while(cin.get()!='\n');
 		cout << endl;
 		
 		switch (scelta) {
@@ -242,13 +244,12 @@ void aggiungi_persona() {
 	
 	cout << "ID: ";
 	cin >> ID_PERSONA;
+	while(cin.get()!='\n');
 	
 	cout << "Nome: ";
-	fflush(stdin);
 	cin.getline(NOME,DIM);
 	
-	cout << "Cognome: ";
-	fflush(stdin);
+	cout << "Cognome: ";	
 	cin.getline(COGNOME,DIM);
 	
 	comando = "INSERT INTO PERSONE (ID_PERSONA, NOME, COGNOME) VALUES (?,?,?)";
@@ -283,13 +284,12 @@ void modifica_persona() {
 	
 	cout << "ID persona da modificare: ";
 	cin >> ID_PERSONA;
+	while(cin.get()!='\n');
 	
 	cout << "Nuovo nome: ";
-	fflush(stdin);
 	cin.getline(NOME,DIM);
 	
 	cout << "Nuovo cognome: ";
-	fflush(stdin);
 	cin.getline(COGNOME,DIM);
 	
 	comando = "UPDATE PERSONE SET NOME = ?, COGNOME = ? WHERE ID_PERSONA = ?";
@@ -322,6 +322,7 @@ void cancella_persona() {
 	
 	cout << "ID persona da eliminare: ";
 	cin >> ID_PERSONA;
+	while(cin.get()!='\n');
 	
 	comando = "DELETE FROM PERSONE WHERE ID_PERSONA = ?";
 	rc = sqlite3_prepare(database, comando, strlen(comando), &stmt, &pzTest);
@@ -349,9 +350,9 @@ void aggiungi_tipo_evento() {
 	
 	cout << "ID: ";
 	cin >> ID_TIPO_EVENTO;
+	while(cin.get()!='\n');
 	
 	cout << "Descrizione: ";
-	fflush(stdin);
 	cin.getline(DESCRIZIONE,DIM);
 	
 	comando = "INSERT INTO TIPO_EVENTO (ID_TIPO_EVENTO, DESCRIZIONE) VALUES (?,?)";
@@ -383,8 +384,9 @@ void modifica_tipo_evento() {
 	
 	cout << "ID tipo evento da modificare: ";
 	cin >> ID_TIPO_EVENTO;
+	while(cin.get()!='\n');
+	
 	cout << "Nuova descrizione: ";
-	fflush(stdin);
 	cin.getline(DESCRIZIONE,DIM);
 	
 	comando = "UPDATE TIPO_EVENTO SET DESCRIZIONE = ? WHERE ID_TIPO_EVENTO = ?";
@@ -415,6 +417,7 @@ void cancella_tipo_evento() {
 	
 	cout << "ID tipo evento da eliminare: ";
 	cin >> ID_TIPO_EVENTO;
+	while(cin.get()!='\n');
 	
 	comando = "DELETE FROM TIPO_EVENTO WHERE ID_TIPO_EVENTO = ?";
 	rc = sqlite3_prepare(database, comando, strlen(comando), &stmt, &pzTest);
@@ -443,12 +446,13 @@ void aggiungi_evento() {
 	
 	cout << "ID persona: ";
 	cin >> ID_PERSONA;
+	while(cin.get()!='\n');
 	
 	cout << "ID tipo evento: ";
 	cin >> ID_TIPO_EVENTO;
+	while(cin.get()!='\n');
 	
 	cout << "Data/ora evento: ";
-	fflush(stdin);
 	cin.getline(DATA_ORA_EVENTO,DIM);
 	
 	comando = "INSERT INTO EVENTI (ID_PERSONA, ID_TIPO_EVENTO, DATA_ORA_EVENTO) VALUES (?,?,?)";
@@ -484,20 +488,21 @@ void modifica_evento() {
 	
 	cout << "ID persona di cui modificare un evento: ";
 	cin >> ID_PERSONA;
+	while(cin.get()!='\n');
 	
 	cout << "ID tipo evento da modificare: ";
 	cin >> ID_TIPO_EVENTO;
+	while(cin.get()!='\n');
 	
 	cout << "Data/ora evento da modificare: ";
-	fflush(stdin);
 	cin.getline(DATA_ORA_EVENTO,DIM);
 	
 	
 	cout << "Nuovo ID tipo evento: ";
 	cin >> NEW_ID_TIPO_EVENTO;
+	while(cin.get()!='\n');
 	
 	cout << "Nuova data/ora evento: ";
-	fflush(stdin);
 	cin.getline(NEW_DATA_ORA_EVENTO,DIM);
 	
 	
@@ -535,12 +540,13 @@ void cancella_evento() {
 	
 	cout << "ID persona da cui eliminare evento: ";
 	cin >> ID_PERSONA;
+	while(cin.get()!='\n');
 	
 	cout << "ID tipo evento da eliminare: ";
 	cin >> ID_TIPO_EVENTO;
+	while(cin.get()!='\n');
 	
 	cout << "Data/ora evento da eliminare: ";
-	fflush(stdin);
 	cin.getline(DATA_ORA_EVENTO,DIM);
 	
 	comando = "DELETE FROM EVENTI WHERE ID_PERSONA = ? AND ID_TIPO_EVENTO = ? AND DATA_ORA_EVENTO = ?";
@@ -749,6 +755,7 @@ void mostra_eventi_ordine_cronologico() {
 	int ID_PERSONA = 0;
 	cout << "ID persona di cui vedere gli eventi: " ;
 	cin >> ID_PERSONA;
+	while(cin.get()!='\n');
 	
 	int i = 0;
 	int row = 1;
@@ -821,6 +828,7 @@ void mostra_eventi_IDtipo() {
 	int ID_TIPO_EVENTO = 0;
 	cout << "ID tipo di evento da visualizzare: " ;
 	cin >> ID_TIPO_EVENTO;
+	while(cin.get()!='\n');
 	
 	cout << "Elenco degli eventi con ID tipo " << ID_TIPO_EVENTO << endl;
 	
