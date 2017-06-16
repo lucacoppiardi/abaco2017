@@ -62,6 +62,7 @@ void Persona :: stampa(){
 }
 
 void Persona::aggiungi_persona(){
+	    cout << "Inserimento persona: " << endl;
 	    comando = "INSERT INTO PERSONE (ID_PERSONA, NOME, COGNOME) VALUES (?,?,?)";
 	    rc = sqlite3_prepare(database, comando, strlen(comando), &stmt, &pzTest);
 	    if (rc == SQLITE_OK) {
@@ -72,7 +73,7 @@ void Persona::aggiungi_persona(){
 		//log_query(sqlite3_expanded_sql(stmt));
 		sqlite3_finalize(stmt);
 		cout << "Persona n." << this->getID_PERSONA()<< " inserita in tabella PERSONE" << endl;
-	    } else {
+	     } else {
 		   cout << "ERRORE aggiungi_persona: " << zErrMsg << endl;
 		   //log_query(zErrMsg);
 		   sqlite3_free(zErrMsg);
@@ -81,7 +82,8 @@ void Persona::aggiungi_persona(){
 }
 
 void Persona :: modifica_persona(){
-	
+	cout << "Modifica persona: " << endl;
+
 	char* nomeNuovo = new char[DIM];
 	char* cognomeNuovo = new char[DIM];
 	
@@ -116,6 +118,8 @@ void Persona :: modifica_persona(){
 }
 
 void Persona :: cancella_persona(){
+	cout << "Eliminazione persona: " << endl;
+
 	comando = "DELETE FROM PERSONE WHERE ID_PERSONA = ?";
 	rc = sqlite3_prepare(database, comando, strlen(comando), &stmt, &pzTest);
 	if (rc == SQLITE_OK) {
