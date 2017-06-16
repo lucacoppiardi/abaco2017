@@ -34,7 +34,7 @@ class Persona{
 			char* NOME;
 			char* COGNOME;
 	public:
-			Persona(){ID_PERSONA=0;}
+			Persona(){}
 			Persona(int ID_PERSONA,char* NOME,char* COGNOME);
 			void setNome(char* NOME){this->NOME=NOME;} 
 			void setCognome(char* COGNOME){this->COGNOME=COGNOME;}
