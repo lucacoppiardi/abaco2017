@@ -100,6 +100,8 @@ void Tipo_Evento :: modifica_tipo_evento(){
 		//log_query(zErrMsg);
 		sqlite3_free(zErrMsg);
 	}
+
+	delete descrizioneNuova;
 }
 
 void Tipo_Evento :: cancella_tipo_evento(){

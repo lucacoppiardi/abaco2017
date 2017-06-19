@@ -114,7 +114,8 @@ void Persona :: modifica_persona(){
 		sqlite3_free(zErrMsg);
 	}
 	
-	return;
+	delete nomeNuovo;
+	delete cognomeNuovo;
 }
 
 void Persona :: cancella_persona(){
