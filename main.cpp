@@ -32,15 +32,16 @@ void mostra_tipo_evento();
 void mostra_eventi();
 void mostra_eventi_ordine_cronologico();
 void mostra_eventi_IDtipo();
-void log_query(const char* txt);
+void log_query(string txt);
 string orario();
+void log_statoDB(string txt);
 
 int main(int argc, char **argv) {
 	
 	ofstream log; // Pulizia log prima di nuova esecuzione programma
 	log.open("query.log"); 
 	if (!log.is_open()) {
-		cout << "Impossibile creare il log!" << endl;
+		cout << "Impossibile creare il log query!" << endl;
 		return -1;
 	}
 	log.close();
@@ -56,6 +57,14 @@ int main(int argc, char **argv) {
 		log_query("Database aperto");
 	}
 	
+	log.open("db.log"); // Pulizia log prima di nuova esecuzione programma
+	if (!log.is_open()) {
+		cout << "Impossibile creare il log DB!" << endl;
+		return -1;
+	}
+	log.close();
+	log_statoDB("********Database all'apertura del programma:********");
+		
 	comando = "CREATE TABLE IF NOT EXISTS PERSONE (ID_PERSONA INTEGER, NOME STRING, COGNOME STRING)";
 	log_query(comando);
 	rc = sqlite3_exec(database, comando, callback, 0, &zErrMsg);
@@ -125,6 +134,8 @@ int main(int argc, char **argv) {
 		cout << "Dati inseriti in EVENTI" << endl;
 	}
 	*/
+	
+	log_statoDB("********Database alla chiusura del programma:********");
 	
 	rc = sqlite3_close(database);
 	if (rc != SQLITE_OK) {
@@ -237,8 +248,8 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
 void aggiungi_persona() {
 	
 	int ID_PERSONA = 0;
-	char *NOME = new char[DIM];
-	char *COGNOME = new char[DIM];
+	string NOME;
+	string COGNOME;
 	
 	cout << "Inserimento persona: " << endl;
 	
@@ -247,17 +258,19 @@ void aggiungi_persona() {
 	while(cin.get()!='\n');
 	
 	cout << "Nome: ";
-	cin.getline(NOME,DIM);
+	getline(cin,NOME);
 	
 	cout << "Cognome: ";	
-	cin.getline(COGNOME,DIM);
+	getline(cin,COGNOME);
 	
 	comando = "INSERT INTO PERSONE (ID_PERSONA, NOME, COGNOME) VALUES (?,?,?)";
 	rc = sqlite3_prepare(database, comando, strlen(comando), &stmt, &pzTest);
 	if (rc == SQLITE_OK) {
 		sqlite3_bind_int(stmt, 1, ID_PERSONA);
-		sqlite3_bind_text(stmt, 2, NOME, strlen(NOME), 0);
-		sqlite3_bind_text(stmt, 3, COGNOME, strlen(COGNOME), 0);
+		const char* cNome = NOME.c_str();
+		const char* cCognome = COGNOME.c_str();
+		sqlite3_bind_text(stmt, 2, cNome, strlen(cNome), 0);
+		sqlite3_bind_text(stmt, 3, cCognome, strlen(cCognome), 0);
 		sqlite3_step(stmt);
 		log_query(sqlite3_expanded_sql(stmt));
 		sqlite3_finalize(stmt);
@@ -268,17 +281,14 @@ void aggiungi_persona() {
 		sqlite3_free(zErrMsg);
 	}
 	
-	delete NOME;
-	delete COGNOME;
-	
 	return;
 }
 
 void modifica_persona() {
 	
 	int ID_PERSONA = 0;
-	char *NOME = new char[DIM];
-	char *COGNOME = new char[DIM];
+	string NOME;
+	string COGNOME;
 	
 	cout << "Modifica persona: " << endl;
 	
@@ -287,16 +297,18 @@ void modifica_persona() {
 	while(cin.get()!='\n');
 	
 	cout << "Nuovo nome: ";
-	cin.getline(NOME,DIM);
+	getline(cin,NOME);
 	
 	cout << "Nuovo cognome: ";
-	cin.getline(COGNOME,DIM);
+	getline(cin,COGNOME);
 	
 	comando = "UPDATE PERSONE SET NOME = ?, COGNOME = ? WHERE ID_PERSONA = ?";
 	rc = sqlite3_prepare(database, comando, strlen(comando), &stmt, &pzTest);
 	if (rc == SQLITE_OK) {
-		sqlite3_bind_text(stmt, 1, NOME, strlen(NOME), 0);
-		sqlite3_bind_text(stmt, 2, COGNOME, strlen(COGNOME), 0);
+		const char* cNOME = NOME.c_str();
+		const char* cCOGNOME = COGNOME.c_str();
+		sqlite3_bind_text(stmt, 1, cNOME, strlen(cNOME), 0);
+		sqlite3_bind_text(stmt, 2, cCOGNOME, strlen(cCOGNOME), 0);
 		sqlite3_bind_int(stmt, 3, ID_PERSONA);
 		sqlite3_step(stmt);
 		log_query(sqlite3_expanded_sql(stmt));
@@ -307,9 +319,6 @@ void modifica_persona() {
 		log_query(zErrMsg);
 		sqlite3_free(zErrMsg);
 	}
-	
-	delete NOME;
-	delete COGNOME;
 	
 	return;
 }
@@ -344,7 +353,7 @@ void cancella_persona() {
 void aggiungi_tipo_evento() {
 	
 	int ID_TIPO_EVENTO = 0;
-	char *DESCRIZIONE = new char[DIM];
+	string DESCRIZIONE;
 	
 	cout << "Aggiunta tipo evento: " << endl;
 	
@@ -353,13 +362,14 @@ void aggiungi_tipo_evento() {
 	while(cin.get()!='\n');
 	
 	cout << "Descrizione: ";
-	cin.getline(DESCRIZIONE,DIM);
+	getline(cin, DESCRIZIONE);
 	
 	comando = "INSERT INTO TIPO_EVENTO (ID_TIPO_EVENTO, DESCRIZIONE) VALUES (?,?)";
 	rc = sqlite3_prepare(database, comando, strlen(comando), &stmt, &pzTest);
 	if (rc == SQLITE_OK) {
 		sqlite3_bind_int(stmt, 1, ID_TIPO_EVENTO);
-		sqlite3_bind_text(stmt, 2, DESCRIZIONE, strlen(DESCRIZIONE), 0);
+		const char* cDESCRIZIONE = DESCRIZIONE.c_str();
+		sqlite3_bind_text(stmt, 2, cDESCRIZIONE, strlen(cDESCRIZIONE), 0);
 		sqlite3_step(stmt);
 		log_query(sqlite3_expanded_sql(stmt));
 		sqlite3_finalize(stmt);
@@ -370,15 +380,13 @@ void aggiungi_tipo_evento() {
 		sqlite3_free(zErrMsg);
 	}
 	
-	delete DESCRIZIONE;
-	
 	return;
 }
 
 void modifica_tipo_evento() {
 	
 	int ID_TIPO_EVENTO = 0;
-	char *DESCRIZIONE = new char[DIM];
+	string DESCRIZIONE;
 	
 	cout << "Modifica tipo evento: " << endl;
 	
@@ -387,12 +395,13 @@ void modifica_tipo_evento() {
 	while(cin.get()!='\n');
 	
 	cout << "Nuova descrizione: ";
-	cin.getline(DESCRIZIONE,DIM);
+	getline(cin, DESCRIZIONE);
 	
 	comando = "UPDATE TIPO_EVENTO SET DESCRIZIONE = ? WHERE ID_TIPO_EVENTO = ?";
 	rc = sqlite3_prepare(database, comando, strlen(comando), &stmt, &pzTest);
 	if (rc == SQLITE_OK) {
-		sqlite3_bind_text(stmt, 1, DESCRIZIONE, strlen(DESCRIZIONE), 0);
+		const char* cDESCRIZIONE = DESCRIZIONE.c_str();
+		sqlite3_bind_text(stmt, 1, cDESCRIZIONE, strlen(cDESCRIZIONE), 0);
 		sqlite3_bind_int(stmt, 2, ID_TIPO_EVENTO);
 		sqlite3_step(stmt);
 		log_query(sqlite3_expanded_sql(stmt));
@@ -403,8 +412,6 @@ void modifica_tipo_evento() {
 		log_query(zErrMsg);
 		sqlite3_free(zErrMsg);
 	}
-	
-	delete DESCRIZIONE;
 	
 	return;
 }
@@ -440,7 +447,7 @@ void aggiungi_evento() {
 	
 	int ID_PERSONA = 0;
 	int ID_TIPO_EVENTO = 0;
-	char *DATA_ORA_EVENTO = new char[DIM];
+	string DATA_ORA_EVENTO;
 	
 	cout << "Inserimento evento: " << endl;
 	
@@ -453,14 +460,15 @@ void aggiungi_evento() {
 	while(cin.get()!='\n');
 	
 	cout << "Data/ora evento: ";
-	cin.getline(DATA_ORA_EVENTO,DIM);
+	getline(cin, DATA_ORA_EVENTO);
 	
 	comando = "INSERT INTO EVENTI (ID_PERSONA, ID_TIPO_EVENTO, DATA_ORA_EVENTO) VALUES (?,?,?)";
 	rc = sqlite3_prepare(database, comando, strlen(comando), &stmt, &pzTest);
 	if (rc == SQLITE_OK) {
 		sqlite3_bind_int(stmt, 1, ID_PERSONA);
 		sqlite3_bind_int(stmt, 2, ID_TIPO_EVENTO);
-		sqlite3_bind_text(stmt, 3, DATA_ORA_EVENTO, strlen(DATA_ORA_EVENTO), 0);
+		const char* cDATA_ORA_EVENTO = DATA_ORA_EVENTO.c_str();
+		sqlite3_bind_text(stmt, 3, cDATA_ORA_EVENTO, strlen(cDATA_ORA_EVENTO), 0);
 		sqlite3_step(stmt);
 		log_query(sqlite3_expanded_sql(stmt));
 		sqlite3_finalize(stmt);
@@ -471,8 +479,6 @@ void aggiungi_evento() {
 		sqlite3_free(zErrMsg);
 	}
 	
-	delete DATA_ORA_EVENTO;
-	
 	return;
 }
 
@@ -481,8 +487,8 @@ void modifica_evento() {
 	int ID_PERSONA = 0;
 	int ID_TIPO_EVENTO = 0;
 	int NEW_ID_TIPO_EVENTO = 0;
-	char *DATA_ORA_EVENTO = new char[DIM];
-	char *NEW_DATA_ORA_EVENTO = new char[DIM];
+	string DATA_ORA_EVENTO;
+	string NEW_DATA_ORA_EVENTO;
 	
 	cout << "Modifica evento: " << endl;
 	
@@ -495,25 +501,25 @@ void modifica_evento() {
 	while(cin.get()!='\n');
 	
 	cout << "Data/ora evento da modificare: ";
-	cin.getline(DATA_ORA_EVENTO,DIM);
-	
+	getline(cin, DATA_ORA_EVENTO);
 	
 	cout << "Nuovo ID tipo evento: ";
 	cin >> NEW_ID_TIPO_EVENTO;
 	while(cin.get()!='\n');
 	
 	cout << "Nuova data/ora evento: ";
-	cin.getline(NEW_DATA_ORA_EVENTO,DIM);
-	
+	getline(cin, NEW_DATA_ORA_EVENTO);
 	
 	comando = "UPDATE EVENTI SET ID_TIPO_EVENTO = ?, DATA_ORA_EVENTO = ? WHERE ID_PERSONA = ? AND ID_TIPO_EVENTO = ? AND DATA_ORA_EVENTO = ?";
 	rc = sqlite3_prepare(database, comando, strlen(comando), &stmt, &pzTest);
 	if (rc == SQLITE_OK) {
 		sqlite3_bind_int(stmt, 1, NEW_ID_TIPO_EVENTO);
-		sqlite3_bind_text(stmt, 2, NEW_DATA_ORA_EVENTO, strlen(NEW_DATA_ORA_EVENTO), 0);
+		const char* cDATA_ORA_EVENTO = DATA_ORA_EVENTO.c_str();
+		const char* cNEW_DATA_ORA_EVENTO = NEW_DATA_ORA_EVENTO.c_str();
+		sqlite3_bind_text(stmt, 2, cNEW_DATA_ORA_EVENTO, strlen(cNEW_DATA_ORA_EVENTO), 0);
 		sqlite3_bind_int(stmt, 3, ID_PERSONA);
 		sqlite3_bind_int(stmt, 4, ID_TIPO_EVENTO);
-		sqlite3_bind_text(stmt, 5, DATA_ORA_EVENTO, strlen(DATA_ORA_EVENTO), 0);
+		sqlite3_bind_text(stmt, 5, cDATA_ORA_EVENTO, strlen(cDATA_ORA_EVENTO), 0);
 		sqlite3_step(stmt);
 		log_query(sqlite3_expanded_sql(stmt));
 		sqlite3_finalize(stmt);
@@ -524,9 +530,6 @@ void modifica_evento() {
 		sqlite3_free(zErrMsg);
 	}
 	
-	delete DATA_ORA_EVENTO;
-	delete NEW_DATA_ORA_EVENTO;
-	
 	return;
 }
 
@@ -534,7 +537,7 @@ void cancella_evento() {
 	
 	int ID_PERSONA = 0;
 	int ID_TIPO_EVENTO = 0;
-	char *DATA_ORA_EVENTO = new char[DIM];
+	string DATA_ORA_EVENTO;
 	
 	cout << "Eliminazione evento: " << endl;
 	
@@ -547,14 +550,15 @@ void cancella_evento() {
 	while(cin.get()!='\n');
 	
 	cout << "Data/ora evento da eliminare: ";
-	cin.getline(DATA_ORA_EVENTO,DIM);
+	getline(cin, DATA_ORA_EVENTO);
 	
 	comando = "DELETE FROM EVENTI WHERE ID_PERSONA = ? AND ID_TIPO_EVENTO = ? AND DATA_ORA_EVENTO = ?";
 	rc = sqlite3_prepare(database, comando, strlen(comando), &stmt, &pzTest);
 	if (rc == SQLITE_OK) {
 		sqlite3_bind_int(stmt, 1, ID_PERSONA);
 		sqlite3_bind_int(stmt, 2, ID_TIPO_EVENTO);
-		sqlite3_bind_text(stmt, 3, DATA_ORA_EVENTO, strlen(DATA_ORA_EVENTO), 0);
+		const char* cDATA_ORA_EVENTO = DATA_ORA_EVENTO.c_str();
+		sqlite3_bind_text(stmt, 3, cDATA_ORA_EVENTO, strlen(cDATA_ORA_EVENTO), 0);
 		sqlite3_step(stmt);
 		log_query(sqlite3_expanded_sql(stmt));
 		sqlite3_finalize(stmt);
@@ -564,8 +568,6 @@ void cancella_evento() {
 		log_query(zErrMsg);
 		sqlite3_free(zErrMsg);
 	}
-	
-	delete DATA_ORA_EVENTO;
 	
 	return;
 }
@@ -896,14 +898,14 @@ void mostra_eventi_IDtipo() {
 	return;
 }
 
-void log_query(const char* txt) {
+void log_query(string txt) {
 	ofstream log;
 	log.open("query.log",ios::app); 
 	if (!log.is_open()) {
 		cout << "Impossibile creare il log!" << endl;
 		return;
 	}
-	log << orario() << " - " << txt << endl;
+	log << orario() << txt << endl;
 	log.close();
 }
 
@@ -915,5 +917,127 @@ string orario() {
 	timeinfo = localtime(&rawtime);
 	strftime(buffer,sizeof(buffer),"%Y-%m-%d %H:%M:%S",timeinfo);
 	string str(buffer);
-	return str;
+	return str + " - ";
+}
+
+void log_statoDB(string txt) {
+	
+	int i = 0;
+	int row = 1;
+	int bytes1 = 0;
+	int bytes2 = 0;
+	int bytes3 = 0;
+	const unsigned char * text1;
+	const unsigned char * text2;
+	const unsigned char * text3;
+	ofstream log;
+	
+	log.open("db.log",ios::app); 
+	if (!log.is_open()) {
+		cout << "Impossibile creare il log!" << endl;
+		return;
+	}
+	log << orario() << txt << endl;
+	
+	log << orario() << "Tabella PERSONE:" << endl;
+	comando = "SELECT * FROM PERSONE";
+	rc = sqlite3_prepare(database, comando, strlen(comando), &stmt, &pzTest);
+	if (rc != SQLITE_OK) {
+		cout << "ERRORE: " << zErrMsg << endl;
+		log_query(zErrMsg);
+		sqlite3_free(zErrMsg);
+		return;
+	}
+	log << "ID\t\tNOME\t\tCOGNOME" << endl;
+	while (1) {
+		int s;
+		s = sqlite3_step (stmt);
+		if (s == SQLITE_ROW) {
+			bytes1 = sqlite3_column_bytes(stmt, 0);
+			text1 = sqlite3_column_text(stmt, 0);
+			bytes2 = sqlite3_column_bytes(stmt, 1);
+			text2 = sqlite3_column_text(stmt, 1);
+			bytes3 = sqlite3_column_bytes(stmt, 2);
+			text3 = sqlite3_column_text(stmt, 2);
+			log << text1 << "\t\t" << text2 << "\t\t" << text3 << endl;
+			row++;
+		}
+		else if (s == SQLITE_DONE) {
+			break;
+		}
+		else {
+			cout << "ERRORE" << endl;
+			return;
+		}
+	}
+	sqlite3_finalize(stmt);
+	log << orario() << "Fine lettura tabella PERSONE" << endl;
+	
+	log << orario() << "Tabella TIPO_EVENTO:" << endl;
+	comando = "SELECT * FROM TIPO_EVENTO";
+	rc = sqlite3_prepare(database, comando, strlen(comando), &stmt, &pzTest);
+	if (rc != SQLITE_OK) {
+		cout << "ERRORE: " << zErrMsg << endl;
+		log_query(zErrMsg);
+		sqlite3_free(zErrMsg);
+		return;
+	}
+	log << "ID\t\tTIPO_EVENTO" << endl;
+	while (1) {
+		int s;
+		s = sqlite3_step (stmt);
+		if (s == SQLITE_ROW) {
+			bytes1 = sqlite3_column_bytes(stmt, 0);
+			text1 = sqlite3_column_text(stmt, 0);
+			bytes2 = sqlite3_column_bytes(stmt, 1);
+			text2 = sqlite3_column_text(stmt, 1);
+			log << text1 << "\t\t" << text2 << endl;
+			row++;
+		}
+		else if (s == SQLITE_DONE) {
+			break;
+		}
+		else {
+			cout << "ERRORE" << endl;
+			return;
+		}
+	}
+	sqlite3_finalize(stmt);
+	log << orario() << "Fine lettura tabella TIPO_EVENTI" << endl;
+	
+	log << orario() << "Tabella EVENTI:" << endl;
+	comando = "SELECT * FROM EVENTI";
+	rc = sqlite3_prepare(database, comando, strlen(comando), &stmt, &pzTest);
+	if (rc != SQLITE_OK) {
+		cout << "ERRORE: " << zErrMsg << endl;
+		log_query(zErrMsg);
+		sqlite3_free(zErrMsg);
+		return;
+	}
+	log << "ID_PERSONA\tID_TIPO_EVENTO\t\tDATA_ORA_EVENTO" << endl;
+	while (1) {
+		int s;
+		s = sqlite3_step (stmt);
+		if (s == SQLITE_ROW) {
+			bytes1 = sqlite3_column_bytes(stmt, 0);
+			text1 = sqlite3_column_text(stmt, 0);
+			bytes2 = sqlite3_column_bytes(stmt, 1);
+			text2 = sqlite3_column_text(stmt, 1);
+			bytes3 = sqlite3_column_bytes(stmt, 2);
+			text3 = sqlite3_column_text(stmt, 2);
+			log << text1 << "\t\t" << text2 << "\t\t\t" << text3 << endl;
+			row++;
+		}
+		else if (s == SQLITE_DONE) {
+			break;
+		}
+		else {
+			cout << "ERRORE" << endl;
+			return;
+		}
+	}
+	sqlite3_finalize(stmt);
+	log << orario() << "Fine lettura tabella EVENTI" << endl;
+	
+	log.close();
 }
