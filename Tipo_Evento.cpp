@@ -1,51 +1,4 @@
-#include <iostream>
-#include <sqlite3.h>
-#include <cstdio>
-#include <cstring>
-#include <fstream>
-#include <ctime>
-using namespace std;
-
-
-#define DIM 100
-
-char *zErrMsg = 0;
-int rc; // return code
-sqlite3 *database;
-const char *comando;
-sqlite3_stmt *stmt;
-const char *pzTest;
-
-
-static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
-	int i;
-	
-	for(i = 0; i < argc; i++) {
-		cout << azColName[i] << " = " << (argv[i] ? argv[i] : "NULL") << endl;
-	}
-	cout << endl;
-	
-	return 0;
-}
-
-class Tipo_Evento {
-	private :
-		 int ID_TIPO_EVENTO;
-		 char* Descrizione;
-	public  :
-		 Tipo_Evento(){}
-		 Tipo_Evento(int ID_TIPO_EVENTO,char* Descrizione);
-		 void setDescrizione(char* Descrizione) {this->Descrizione = Descrizione;}
-		 void setID_TIPO_EVENTO(int ID_TIPO_EVENTO) {this->ID_TIPO_EVENTO =ID_TIPO_EVENTO;}
-		 char* getDescrizione() {return Descrizione;}
-		 int getID_TIPO_EVENTO()  {return ID_TIPO_EVENTO;}
-		 void stampa();
-		 void aggiungi_tipo_evento();
-		 void modifica_tipo_evento();
-		 void cancella_tipo_evento();
-};
-
-Tipo_Evento :: Tipo_Evento (int ID_TIPO_EVENTO,char* Descrizione){
+Tipo_Evento :: Tipo_Evento (int ID_TIPO_EVENTO,string Descrizione){
 	this->ID_TIPO_EVENTO=ID_TIPO_EVENTO;
 	this->Descrizione=Descrizione;
 }
@@ -63,7 +16,7 @@ void Tipo_Evento :: aggiungi_tipo_evento(){
 	rc = sqlite3_prepare(database, comando, strlen(comando), &stmt, &pzTest);
 	if (rc == SQLITE_OK) {
 		sqlite3_bind_int(stmt, 1,this->getID_TIPO_EVENTO());
-		sqlite3_bind_text(stmt, 2, this->getDescrizione(), strlen(this->getDescrizione()), 0);
+		sqlite3_bind_text(stmt, 2, this->getDescrizione().c_str(), strlen(this->getDescrizione().c_str()), 0);
 		sqlite3_step(stmt);
 		//log_query(sqlite3_expanded_sql(stmt));
 		sqlite3_finalize(stmt);
@@ -76,20 +29,19 @@ void Tipo_Evento :: aggiungi_tipo_evento(){
 }
 
 void Tipo_Evento :: modifica_tipo_evento(){
-	int idNuovo = 0;
-	char *descrizioneNuova = new char[DIM];
+	string nuovaDescrizione;
 	
 	cout << "Modifica tipo evento: " << endl;
 		
 	cout << "Nuova descrizione: ";
-	cin.getline(descrizioneNuova,DIM);
+	getline(cin,nuovaDescrizione);
 	
-	this->setDescrizione(descrizioneNuova);
+	this->setDescrizione(nuovaDescrizione);
 	
 	comando = "UPDATE TIPO_EVENTO SET DESCRIZIONE = ? WHERE ID_TIPO_EVENTO = ?";
 	rc = sqlite3_prepare(database, comando, strlen(comando), &stmt, &pzTest);
 	if (rc == SQLITE_OK) {
-		sqlite3_bind_text(stmt, 1,this->getDescrizione(), strlen(this->getDescrizione()), 0);
+		sqlite3_bind_text(stmt, 1,this->getDescrizione().c_str(), strlen(this->getDescrizione().c_str()), 0);
 		sqlite3_bind_int(stmt, 2, this->getID_TIPO_EVENTO());
 		sqlite3_step(stmt);
 		//log_query(sqlite3_expanded_sql(stmt));
@@ -100,8 +52,7 @@ void Tipo_Evento :: modifica_tipo_evento(){
 		//log_query(zErrMsg);
 		sqlite3_free(zErrMsg);
 	}
-
-	delete descrizioneNuova;
+	
 }
 
 void Tipo_Evento :: cancella_tipo_evento(){
